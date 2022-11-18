@@ -1,8 +1,8 @@
 import { Button, Card, Col, Empty, Row } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useContext } from 'react'
-import { Store } from '../../store';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCart } from '../../store/reducers/cartReducer';
 import { ProductDataTypes } from '../ProductList/ProductList.types';
 import Styles from './CartComp.module.scss';
 import CartItem from './CartItems';
@@ -10,8 +10,8 @@ import CartItem from './CartItems';
 const CartComp = () => {
     const router = useRouter();
     // @ts-ignore
-    const { state, dispatch } = useContext(Store);
-    const cartItems = state?.cart?.cartItems || []
+    const { cartItems, totalItems } = useSelector(selectCart);
+    const dispatch = useDispatch()
     const handleCheckout = () => {
         router.push('/sign-in?redirect=shipping')
     }
@@ -39,7 +39,7 @@ const CartComp = () => {
                                     </span>
                                     {" "}
                                     <span className={Styles.total_quantity}>
-                                        ({cartItems.reduce((a: number, c: ProductDataTypes) => a + (c?.quantity || 0), 0)} items)
+                                        {totalItems} items
                                     </span>
                                 </h4>
                                 <Button onClick={handleCheckout} type='primary' style={{ backgroundColor: "#faad14", borderColor: "#faad14", color: "#333" }}>

@@ -2,8 +2,9 @@ import type { AppProps } from 'next/app'
 import 'antd/dist/antd.css';
 import "../styles/global.scss"
 import { notification } from 'antd';
-import { StoreProvider } from '../store';
+import { Provider } from 'react-redux';
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+import { store } from '../store';
 
 function MyApp({ Component, pageProps }: AppProps) {
   notification.config({
@@ -13,12 +14,12 @@ function MyApp({ Component, pageProps }: AppProps) {
     // rtl: true,
   });
 
-  return <StoreProvider >
+  return <Provider store={store} >
     {/* @ts-ignore */}
     <PayPalScriptProvider deferLoading={true}>
       <Component {...pageProps} />
     </PayPalScriptProvider>
-  </StoreProvider>
+  </Provider>
 }
 
 export default MyApp

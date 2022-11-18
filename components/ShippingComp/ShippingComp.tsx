@@ -5,8 +5,9 @@ import {
     Select,
 } from 'antd';
 import { useRouter } from 'next/router';
-import React, { useContext, useEffect, useState } from 'react';
-import { Store } from '../../store';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { saveShippingAddress, selectCart } from '../../store/reducers/cartReducer';
 import { OptionTypes } from './ShippingComp.types';
 import { getDistricts, getDivisions } from './utils';
 
@@ -38,16 +39,17 @@ const ShippingComp: React.FC = () => {
     const router = useRouter();
 
     // @ts-ignore
-    const { state, dispatch } = useContext(Store)
+    const dispatch = useDispatch()
+    const { shippingAddress } = useSelector(selectCart)
     const [defaultFormValue, setDefaultFormValue] = useState({
-        name: state?.cart?.shippingAddress?.name,
-        country_of_residence: state?.cart?.shippingAddress?.country_of_residence,
-        division: state?.cart?.shippingAddress?.division,
-        district: state?.cart?.shippingAddress?.district,
-        prefix: state?.cart?.shippingAddress?.prefix || '880',
-        phone: state?.cart?.shippingAddress?.phone,
-        street: state?.cart?.shippingAddress?.street,
-        post_code: state?.cart?.shippingAddress?.post_code
+        name: shippingAddress?.name,
+        country_of_residence: shippingAddress?.country_of_residence,
+        division: shippingAddress?.division,
+        district: shippingAddress?.district,
+        prefix: shippingAddress?.prefix || '880',
+        phone: shippingAddress?.phone,
+        street: shippingAddress?.street,
+        post_code: shippingAddress?.post_code
     })
     const [divisions, setDivisions] = useState<OptionTypes[]>([])
     const [districts, setDistricts] = useState([])
@@ -64,18 +66,16 @@ const ShippingComp: React.FC = () => {
     );
 
     const onFinish = async (values: any) => {
-        await dispatch({
-            type: 'SAVE_SHIPPING_ADDRESS', payload: {
-                name: values.name,
-                country_of_residence: values.country_of_residence,
-                division: values.division,
-                district: values.district,
-                prefix: values.prefix,
-                phone: values.phone,
-                street: values.street,
-                post_code: values.post_code
-            }
-        })
+        dispatch(saveShippingAddress({
+            name: values.name,
+            country_of_residence: values.country_of_residence,
+            division: values.division,
+            district: values.district,
+            prefix: values.prefix,
+            phone: values.phone,
+            street: values.street,
+            post_code: values.post_code
+        }))
         await router.push('/payment-method')
     };
 
@@ -111,16 +111,16 @@ const ShippingComp: React.FC = () => {
 
     useEffect(() => {
         setDefaultFormValue({
-            name: state?.cart?.shippingAddress?.name,
-            country_of_residence: state?.cart?.shippingAddress?.country_of_residence,
-            division: state?.cart?.shippingAddress?.division,
-            district: state?.cart?.shippingAddress?.district,
-            prefix: state?.cart?.shippingAddress?.prefix || '880',
-            phone: state?.cart?.shippingAddress?.phone,
-            street: state?.cart?.shippingAddress?.street,
-            post_code: state?.cart?.shippingAddress?.post_code
+            name: shippingAddress?.name,
+            country_of_residence: shippingAddress?.country_of_residence,
+            division: shippingAddress?.division,
+            district: shippingAddress?.district,
+            prefix: shippingAddress?.prefix || '880',
+            phone: shippingAddress?.phone,
+            street: shippingAddress?.street,
+            post_code: shippingAddress?.post_code
         })
-    }, [state?.cart?.shippingAddress])
+    }, [shippingAddress])
 
     return (
         <Form

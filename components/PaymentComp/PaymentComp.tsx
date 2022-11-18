@@ -1,28 +1,29 @@
-import { Button, Form, Radio, RadioChangeEvent } from 'antd'
+import { Button, Radio, RadioChangeEvent } from 'antd'
 import { useRouter } from 'next/router'
-import React, { useContext, useEffect, useState } from 'react'
-import { Store } from '../../store'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { savePaymentMethod, selectCart } from '../../store/reducers/cartReducer'
 import Styles from './PaymentComp.module.scss'
 
 const PaymentComp = () => {
     const router = useRouter()
     // @ts-ignore
-    const { state, dispatch } = useContext(Store);
-    const [paymentMethod, setPaymentMethod] = useState(state?.cart?.paymentMethod || 'bkash')
+    const { paymentMethod: _paymentMethod } = useSelector(selectCart)
+    const [paymentMethod, setPaymentMethod] = useState(_paymentMethod || 'bkash')
 
-    console.log({ state })
+    const dispatch = useDispatch()
 
     const handlePaymentMethod = ({ target: { value } }: RadioChangeEvent) => {
         setPaymentMethod(value);
     };
     const handleProceedToPayment = () => {
-        dispatch({ type: 'SAVE_PAYMENT_METHOD', payload: paymentMethod })
+        dispatch(savePaymentMethod(paymentMethod))
         router.push('/review-order')
     };
 
     useEffect(() => {
-        setPaymentMethod(state?.cart?.paymentMethod || 'bkash')
-    }, [state])
+        setPaymentMethod(paymentMethod || 'bkash')
+    }, [_paymentMethod])
 
     return (
         <div className='login_register_form' style={{ maxWidth: 500 }}>

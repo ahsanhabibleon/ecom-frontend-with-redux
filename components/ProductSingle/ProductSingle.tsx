@@ -1,19 +1,23 @@
 import { Badge, Button, notification } from 'antd';
 import Link from 'next/link';
-import React, { useContext } from 'react'
-import { Store } from '../../store';
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { addItemToCart, selectCart } from '../../store/reducers/cartReducer';
 import { ProductDataTypes } from '../ProductList/ProductList.types'
 import Styles from './ProductSingle.module.scss'
 
 const ProductSingle = (props: { product: ProductDataTypes | null, className?: string }) => {
     const { product, className } = props;
     // @ts-ignore
-    const { state, dispatch } = useContext(Store);
+
+    const dispatch = useDispatch()
+
+    const { cartItems } = useSelector(selectCart)
 
     const handleClick = (event: any) => {
         event.preventDefault();
-        const existedItem = state?.cart?.cartItems?.find((c: ProductDataTypes) => c._id === product?._id)
-        const quantity = existedItem ? (existedItem.quantity + 1) : 1
+        const existedItem = cartItems?.find((c: ProductDataTypes) => c._id === product?._id)
+        const quantity = existedItem ? ((existedItem?.quantity || 0) + 1) : 1
 
         if (!product?.countInStock || (product?.countInStock < quantity)) {
             notification.error({
@@ -21,8 +25,7 @@ const ProductSingle = (props: { product: ProductDataTypes | null, className?: st
             })
             return;
         }
-        console.log({ existedItem, quantity })
-        dispatch({ type: 'ADD_ITEM_TO_CART', payload: { ...product, quantity } })
+        dispatch(addItemToCart({ ...product, quantity }))
     }
 
     const badgeColor = !product?.countInStock ? 'red' : product?.countInStock < 6 ? 'purple' : 'green'

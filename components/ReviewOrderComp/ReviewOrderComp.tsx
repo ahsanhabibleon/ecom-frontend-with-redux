@@ -1,8 +1,9 @@
 import { Button, Card, Col, notification, Row, Spin } from 'antd'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { useContext, useState } from 'react'
-import { Store } from '../../store'
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { clearCart, selectCart } from '../../store/reducers/cartReducer'
 import { capitalizeFirstLetter } from '../../utils'
 import CartItem from '../CartComp/CartItems'
 import { ProductDataTypes } from '../ProductList/ProductList.types'
@@ -10,8 +11,8 @@ import Styles from './ReviewOrderComp.module.scss'
 
 const ReviewOrderComp = () => {
     // @ts-ignore
-    const { state, dispatch } = useContext(Store);
-    const { shippingAddress, paymentMethod, cartItems } = state?.cart;
+    const dispatch = useDispatch()
+    const { cartItems, paymentMethod, shippingAddress } = useSelector(selectCart)
     const totalPrice = cartItems?.reduce((a: number, c: ProductDataTypes) => a + ((c?.price * (c?.quantity || 0))), 0)
     const tax = totalPrice * 0.05;
     const shipping = totalPrice > 100 ? 0 : 10;
@@ -53,7 +54,7 @@ const ReviewOrderComp = () => {
                 .then((response) => response.json())
                 .then((res) => {
                     console.log({ res })
-                    dispatch({ type: 'CLEAR_CART' })
+                    dispatch(clearCart())
                     localStorage.removeItem('store')
                     // notification.success({ message: res?.message || 'Order created successfully!' })
                     router.push(`/order/${res?.order?._id}`)

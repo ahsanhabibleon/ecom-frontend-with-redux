@@ -1,5 +1,5 @@
 import { Dispatch, useEffect } from "react"
-import { InitialStateType, ReducerActionProps } from "../store";
+import { InitialStateType, ReducerActionProps } from "../store/reducers/cartReducer";
 
 export const useLocalStorage = (key: string, state: InitialStateType, initialState: InitialStateType, dispatch: Dispatch<ReducerActionProps>) => {
 

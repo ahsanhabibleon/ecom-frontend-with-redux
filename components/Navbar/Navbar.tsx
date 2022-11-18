@@ -1,19 +1,19 @@
 import Link from 'next/link'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Styles from "./Navbar.module.scss"
 import jwt_decode from "jwt-decode";
 import { Dropdown, Menu, notification, Space } from 'antd';
 import { DownOutlined, ShoppingCartOutlined } from '@ant-design/icons';
-import { Store } from '../../store';
-import { ProductDataTypes } from '../ProductList/ProductList.types';
 import Badge from '../../molicules/Button/Badge';
+import { selectCart } from '../../store/reducers/cartReducer';
+import { useSelector } from 'react-redux';
 
 const Navbar = () => {
 
     const [user, setUser] = useState<any>(null);
 
+    const { totalItems } = useSelector(selectCart);
     // @ts-ignore
-    const { state } = useContext(Store);
 
     const logout = () => {
         localStorage.removeItem("token");
@@ -67,12 +67,13 @@ const Navbar = () => {
                     <span className={Styles.icon}>
                         <ShoppingCartOutlined />
                     </span>
-                    <Badge count={state?.cart?.cartItems?.reduce((a: number, c: ProductDataTypes) => a + (c?.quantity || 0), 0)}>
+
+                    <Badge count={totalItems}>
                         Cart
                     </Badge>
                 </a>
             </Link>
-        </div>
+        </div >
     )
 }
 

@@ -1,6 +1,7 @@
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons"
 import { Popconfirm } from "antd";
 import Image from "next/image"
+import { removeItemFromCart } from "../../../store/reducers/cartReducer";
 import Styles from './CartItem.module.scss';
 import { PropObjTypes } from "./CartItem.types";
 
@@ -8,8 +9,8 @@ const CartItem = ({ propObj, forPreview = false }: { propObj: PropObjTypes, forP
 
     const { item, dispatch } = propObj
 
-    const removeItemFromCart = () => {
-        dispatch({ type: 'REMOVE_ITEM_FROM_CART', payload: { id: item._id } })
+    const handleRemoveItem = () => {
+        dispatch(removeItemFromCart({ id: item._id }))
     };
 
     const updateQuantity = (param: string) => {
@@ -48,7 +49,7 @@ const CartItem = ({ propObj, forPreview = false }: { propObj: PropObjTypes, forP
                         className={Styles.remove_icon}
                         title="Remove this item from cart?"
                         placement="topRight"
-                        onConfirm={removeItemFromCart}
+                        onConfirm={handleRemoveItem}
                         okText="Yes"
                         cancelText="No"
                     >
