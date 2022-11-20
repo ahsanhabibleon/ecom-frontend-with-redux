@@ -51,6 +51,7 @@ const ProductList = () => {
     }
     useEffect(() => {
         fetchData()
+
     }, [])
 
     return (
