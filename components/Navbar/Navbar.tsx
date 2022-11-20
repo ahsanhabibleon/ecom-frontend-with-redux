@@ -5,10 +5,12 @@ import jwt_decode from "jwt-decode";
 import { Dropdown, Menu, notification, Space } from 'antd';
 import { DownOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import Badge from '../../molicules/Button/Badge';
-import { selectCart } from '../../store/reducers/cartReducer';
-import { useSelector } from 'react-redux';
+import { resetInitialState, selectCart } from '../../store/reducers/cartReducer';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Navbar = () => {
+
+    const dispatch = useDispatch()
 
     const [user, setUser] = useState<any>(null);
 
@@ -17,7 +19,8 @@ const Navbar = () => {
 
     const logout = () => {
         localStorage.removeItem("token");
-        localStorage.removeItem("store");
+        dispatch(resetInitialState())
+
         window.location.reload();
         notification.success({
             message: 'Successfully logged out!',

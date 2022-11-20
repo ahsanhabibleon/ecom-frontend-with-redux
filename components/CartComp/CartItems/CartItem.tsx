@@ -1,7 +1,7 @@
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons"
 import { Popconfirm } from "antd";
 import Image from "next/image"
-import { removeItemFromCart } from "../../../store/reducers/cartReducer";
+import { addItemToCart, removeItemFromCart, updateQuantity } from "../../../store/reducers/cartReducer";
 import Styles from './CartItem.module.scss';
 import { PropObjTypes } from "./CartItem.types";
 
@@ -9,20 +9,28 @@ const CartItem = ({ propObj, forPreview = false }: { propObj: PropObjTypes, forP
 
     const { item, dispatch } = propObj
 
+    console.log({ item })
+
     const handleRemoveItem = () => {
         dispatch(removeItemFromCart({ id: item._id }))
     };
 
-    const updateQuantity = (param: string) => {
+    const handleUpdateQuantity = (param: string) => {
         const newItem = { ...item };
         if (newItem?.quantity || newItem?.quantity === 0) {
             if (param === 'decrement' && newItem.quantity > 0) {
-                newItem.quantity = (newItem?.quantity || 0) - 1
+                dispatch(updateQuantity({
+                    id: newItem?._id,
+                    quantity: -1
+                }))
+
             }
-            if (param === 'increment' && newItem.quantity < newItem.countInStock) {
-                newItem.quantity = (newItem?.quantity || 0) + 1
+            if (param === 'increment') {
+                dispatch(updateQuantity({
+                    id: newItem?._id,
+                    quantity: 1
+                }))
             }
-            dispatch({ type: 'UPDATE_QUANTITY', payload: { item: newItem } })
         }
     }
 
@@ -37,11 +45,11 @@ const CartItem = ({ propObj, forPreview = false }: { propObj: PropObjTypes, forP
             {!forPreview &&
                 <>
                     <div className={Styles.item_quantity}>
-                        <span className={!item?.quantity || item?.quantity < 2 ? 'disabled' : ''} onClick={() => updateQuantity('decrement')}>
+                        <span className={!item?.quantity || item?.quantity < 2 ? 'disabled' : ''} onClick={() => handleUpdateQuantity('decrement')}>
                             <MinusOutlined />
                         </span>
                         <span>{item.quantity}</span>
-                        <span className={(item?.quantity || item?.quantity === 0) && item?.quantity < item.countInStock ? '' : 'disabled'} onClick={() => updateQuantity('increment')}>
+                        <span className={(item?.quantity || item?.quantity === 0) && item?.quantity < item.countInStock ? '' : 'disabled'} onClick={() => handleUpdateQuantity('increment')}>
                             <PlusOutlined />
                         </span>
                     </div>

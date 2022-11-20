@@ -39,8 +39,6 @@ const ReviewOrderComp = () => {
 
         setLoading(true)
 
-        console.log({ dataToSendToTheBackend })
-
         try {
             await fetch('/api/orders', {
                 method: 'POST',
@@ -55,8 +53,6 @@ const ReviewOrderComp = () => {
                 .then((res) => {
                     console.log({ res })
                     dispatch(clearCart())
-                    localStorage.removeItem('store')
-                    // notification.success({ message: res?.message || 'Order created successfully!' })
                     router.push(`/order/${res?.order?._id}`)
                 })
                 .catch((error) => {

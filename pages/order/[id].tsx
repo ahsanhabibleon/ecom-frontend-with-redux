@@ -88,7 +88,7 @@ const OrderDetails = () => {
 
     useEffect(() => {
         if (!token) {
-            router.push('/login')
+            router.push('/sign-in')
         } else if (orderId) {
             axios.get(`/api/orders/${orderId}`, {
                 headers: {
