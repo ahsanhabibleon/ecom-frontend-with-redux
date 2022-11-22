@@ -1,7 +1,8 @@
 {
   "plugins": [
     "prettier",
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "testing-library"
   ],
   "extends": [
     "airbnb-typescript",
@@ -94,11 +95,14 @@
     {
       "files": [
         "*.test.js",
-        "*.spec.js"
+        "*.spec.js",
+         "**/__tests__/**/*.[jt]s?(x)",
+        "**/?(*.)+(spec|test).[jt]s?(x)"
       ],
       "rules": {
         "no-unused-expressions": "off"
-      }
+      },
+      "extends": ["plugin:testing-library/react"]
     }
   ]
 }
