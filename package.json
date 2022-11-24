@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest --watch",
-    "test:ci": "jest --ci"
+    "test:ci": "jest --ci",
+    "coverage": "yarn test --coverage --watchAll --collectCoverageFrom='components/**/*.{ts,tsx}' --collectCoverageFrom='pages/**/*.{ts,tsx}'"
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
